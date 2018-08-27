@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart'; //to parse html from the string
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,6 +30,14 @@ class _HomePageState extends State<HomePage> {
     this.setState(() {
       mainProfilePicture = backupString;
     });
+  }
+
+  //remove html code from our news excerpt
+  String _parseHtmlExcerpt(String excerpt) {
+
+    var document = parse(excerpt);
+    String parsedString = parse(document.body.text).documentElement.text;
+    return parsedString.substring(0, 30) + "...";
   }
 
   @override
@@ -129,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     new Padding(
                                       padding: new EdgeInsets.only(left: 18.0, right: 15.0, bottom: 16.0),
-                                      child: new Text(_news[index]["excerpt"]["rendered"].substring(3, 35) + "...", style: new TextStyle(color: Colors.grey[500], fontSize: 18.0),),
+                                      child: new Text(_parseHtmlExcerpt(_news[index]["excerpt"]["rendered"]), style: new TextStyle(color: Colors.grey[500], fontSize: 18.0),),
                                     ),
                                     new Padding(
                                       padding: new EdgeInsets.only(left: 18.0, top: 10.0,),
@@ -141,7 +150,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                onTap: null,
+                                onTap: (){
+                                  print('Open news details screen');
+                                },
                               ),
                             ),
                             new Column(
@@ -163,7 +174,9 @@ class _HomePageState extends State<HomePage> {
                                       child: new Padding(
                                           padding:new EdgeInsets.all(4.0),
                                           child: new Icon(Icons.bookmark_border)),
-                                      onTap: null,
+                                      onTap: (){
+                                        print('Bookmark the current article and save it in Bookmarks screen');
+                                      },
                                     ),
                                   ],
                                 ),
